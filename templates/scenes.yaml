@@ -1,0 +1,65 @@
+- id: '1633116801148'
+  name: GrzanieOn
+  entities:
+    automation.grzanie_2:
+      last_triggered: '2021-10-01T16:26:34.450411+00:00'
+      mode: single
+      current: 0
+      id: Grzanie
+      friendly_name: Grzanie
+      state: 'on'
+- id: '1633116852016'
+  name: GrzanieOff
+  entities:
+    automation.wietrzenie:
+      last_triggered: '2021-10-01T06:24:30.831420+00:00'
+      mode: single
+      current: 0
+      id: Wietrzenie
+      friendly_name: Wietrzenie
+      state: 'on'
+- id: '1641412616581'
+  name: SuszenieRecznikówOn
+  entities:
+    climate.termostatlazienkapietro_thermostat:
+      hvac_modes:
+      - 'off'
+      - heat
+      - cool
+      min_temp: 8
+      max_temp: 28
+      target_temp_step: 0.5
+      current_temperature: 21
+      temperature: 25
+      friendly_name: termostatLazienkaPietro _thermostat
+      supported_features: 1
+      state: heat
+  metadata:
+    climate.termostatlazienkapietro_thermostat:
+      entity_only: true
+  icon: mdi:air-filter
+- id: '1641412737687'
+  name: SuszenieRecznikowOff
+  entities:
+    climate.termostatlazienkapietro_thermostat:
+      hvac_modes:
+      - 'off'
+      - heat
+      - cool
+      min_temp: 8
+      max_temp: 28
+      target_temp_step: 0.5
+      current_temperature: 20.2
+      temperature: 20.5
+      friendly_name: termostatLazienkaPietro _thermostat
+      supported_features: 1
+      state: heat
+    light.termostatlazienkapietro_dimmer:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 129
+      friendly_name: termostatLazienkaPietro _dimmer
+      supported_features: 0
+      state: 'on'
+  metadata: {}

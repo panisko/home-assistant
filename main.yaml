@@ -1,0 +1,51 @@
+---
+- name: update homeassistant configuration files
+  hosts: nas
+  gather_facts: false
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars:
+    homeassistant_config_dir: "/volume3/docker/ha/hassio/homeassistant"
+    homeassistant_config_files:
+      - name: configuration.yaml
+        src: "homeassistant/configuration.yaml"
+        dest: "{{ homeassistant_config_dir }}/configuration.yaml"
+  tasks:
+    - name: Create homeassistant directory
+      file:
+        path: "{{ homeassistant_config_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "users"
+    - name: template files
+      template:
+        src: "{{ item }}"
+        dest: "{{ homeassistant_config_dir }}/{{ item }}"
+        owner: "{{ ansible_user }}"
+        group: "users"
+        mode: 0644
+      loop:
+        - timers.yaml
+        - groups.yaml
+        - secrets.yaml
+        - automations.yaml
+        - scenes.yaml
+      notify: "restart_ha"
+    - name: copy configurations
+      copy:
+        src: "{{ item }}"
+        dest: "{{ homeassistant_config_dir }}/{{ item }}"
+        owner: "{{ ansible_user }}"
+        group: "users"
+        mode: 0644
+      loop:
+        - templates.yaml
+        - configuration.yaml
+      notify: "restart_ha"
+  handlers:
+    - name: restart homeassistant
+      command: /usr/local/bin/docker restart ha
+      listen: "restart_ha"
+
+

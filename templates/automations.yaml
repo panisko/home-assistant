@@ -1,0 +1,326 @@
+- id: Wietrzenie
+  alias: Wietrzenie - notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.grzanie
+    to: 'off'
+    from: 'on'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  - service: notify.mobile_app_ipad
+    data:
+      message: Grzanie OFF
+  mode: single
+  max: 10
+- id: Grzanie
+  alias: Grzanie-notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.grzanie
+    to: 'on'
+    from: 'off'
+  condition: []
+  action:
+  - service: notify.mobile_app_ipad
+    data:
+      message: Grzanie ON
+  mode: single
+- id: '1621952924065'
+  alias: SzuszenieReczników-O
+  description: ''
+  trigger:
+  - platform: time_pattern
+    hours: '18'
+  - platform: time_pattern
+    hours: '05'
+  condition:
+  - condition: state
+    entity_id: input_boolean.grzanie
+    state: 'on'
+  action:
+  - scene: scene.suszenierecznikow
+  mode: single
+- id: '1622404158462'
+  alias: NotifyWhenSirenChanges
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.syrenapietro_switch
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Syrena zmieniła stan
+  - service: notify.mobile_app_blackberry_z10
+    data:
+      message: Syrena wlaczona
+  mode: single
+- id: '1625381003630'
+  alias: TurnOnHeatingSource
+  description: When temperature that is set
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: '*'
+    seconds: '30'
+  condition:
+  - condition: state
+    entity_id: input_boolean.grzanie
+    state: 'on'
+    enabled: false
+  - condition: numeric_state
+    entity_id: sensor.heating_calculation2
+    above: '11'
+    enabled: false
+  - condition: device
+    type: is_off
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.grzanie
+      state: 'on'
+    - condition: numeric_state
+      entity_id: sensor.heating_calculation2
+      above: 11
+    - condition: state
+      entity_id: switch.pompa
+      state: 'off'
+  action:
+  - type: turn_on
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Pompa ON
+  - service: notify.mobile_app_ipad
+    data:
+      message: Pompa ON
+  mode: single
+- id: '1625810685779'
+  alias: NotifyIfHeatingCalculationIsNotPossible
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.heating_calculation2
+    to: unavailable
+  condition: []
+  action:
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Kalkulacja grzania niemożliwa
+  mode: single
+- id: '1632748344980'
+  alias: SuszenieReczników-Off
+  description: ''
+  trigger:
+  - platform: time_pattern
+    hours: '22'
+    minutes: '00'
+  - platform: time_pattern
+    hours: 08
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.suszenierecznikowoff
+    metadata: {}
+  mode: single
+- id: '1639477852044'
+  alias: TurnOffHeatingSource
+  description: When temperature that is set
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: '*'
+    seconds: '30'
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.heating_calculation2
+    below: '11'
+  - condition: device
+    type: is_on
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  - condition: state
+    entity_id: input_boolean.grzanie
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  mode: single
+- id: '1645212188020'
+  alias: Wlacz swiatlo wieczorem
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '0'
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      area_id: kuchnia
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id: kuchnia
+  - service: light.turn_on
+    data:
+      brightness: 85
+    target:
+      area_id: salon
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id: salon
+  mode: single
+- id: '1694182241210'
+  alias: TurnHeatingOffv2
+  description: When temperature that is set
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: '*'
+    seconds: '30'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.grzanie
+      state: 'on'
+    - condition: state
+      entity_id: switch.pompa
+      state: 'on'
+    - condition: numeric_state
+      entity_id: sensor.heating_calculation2
+      below: 11
+  action:
+  - type: turn_off
+    device_id: 9325a6734bc629723ca8c43001f20033
+    entity_id: 3f244718689bd761244f2af00d0d49fe
+    domain: switch
+  mode: single
+- id: '1697877867648'
+  alias: GrzanieOn - temperatura
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: weather.home
+    attribute: temperature
+    below: 10
+  condition:
+  - condition: state
+    entity_id: input_boolean.grzanie
+    state: 'off'
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.grzanieon
+    metadata: {}
+  mode: single
+- id: '1703418806941'
+  alias: alarm-ruch-dzienny
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: e1bfdd03664a1655c8f7a79e2585007a
+    entity_id: a830a6b791a1748f06bd4a37a1cbab72
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.alarm_arm
+      state: 'on'
+  action:
+  - type: turn_on
+    device_id: 855e4a1a1e3409bad17c209096e484ff
+    entity_id: 772ed027a01e4f6423c5d6267f8e82cf
+    domain: switch
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Ruch wykryty
+  mode: single
+- id: '1703419233412'
+  alias: alarm-ruch-schody
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 5f2b0cf40e6ff589a39882a0b42600a2
+    entity_id: f0a0b52386ad397856b44718b1c112a0
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.alarm_arm
+      state: 'on'
+  action:
+  - type: turn_on
+    device_id: 855e4a1a1e3409bad17c209096e484ff
+    entity_id: 772ed027a01e4f6423c5d6267f8e82cf
+    domain: switch
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Ruch wykryty
+  mode: single
+- id: '1703419325175'
+  alias: alarm-uzbrojony-wiadomosc
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.alarm_arm
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Alarm uzbrojony
+  mode: single
+- id: '1703419372236'
+  alias: alarm-rozbrojony-wiadomosc
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.alarm_arm
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: notify.mobile_app_oppo5
+    data:
+      message: Alarm rozbrojony
+  mode: single

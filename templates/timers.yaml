@@ -1,0 +1,8 @@
+  reczniki:
+    name: reczniki
+    duration: "00:30:00"
+
+  syrena:
+    name: syrena
+    icon: mdi:ambulance
+    duration: "00:01:00"
