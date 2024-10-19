@@ -107,7 +107,7 @@
                 {# {% if result.value > 1 %} #}
                 {# if result.value is greater than 0.8 degree enable heating #}
                 {# MAIN CONDITION #}
-                {% if result.value > 0.8 %}
+                {% if result.value > 0.5 %}
                 20
                 {% else %}
                 10
