@@ -1,0 +1,51 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+
+#http:
+#  use_x_forwarded_for: true
+#  trusted_proxies:
+#    - 10.11.12.10
+#    - 192.168.30.0/24
+#    - 192.168.70.0/24
+#    - 172.17.0.0/16
+#    - 172.19.0.0/16
+#    - 127.0.0.1
+homekit:
+  name: "HABridge"
+  port: 21063
+  filter:
+    include_domains:
+      - automation
+      - input_boolean
+
+prometheus:
+
+recorder:
+  db_url: {{ mysql_connection_string }}
+  purge_keep_days: 365
+
+
+logger:
+  default: warning
+
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+#script: !include scripts.yaml
+scene: !include scenes.yaml
+timer: !include timers.yaml
+template: !include templates.yaml
+
+input_number:
+  temperaturediff:
+    name: Temperature trigger for heating
+    icon: mdi:home-thermometer-outline
+    initial: 0.5
+    min: 0
+    max: 1
+    step: 0.1
+    unit_of_measurement: step

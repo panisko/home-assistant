@@ -1,5 +1,10 @@
 ---
-  - sensor:
+  - trigger:
+      - platform: time_pattern
+        hours: "*"
+        minutes: "*"
+        seconds: "/30"
+    sensor:
       - name: "average_temperature"
         unit_of_measurement: "°C"
         state: >
@@ -105,12 +110,12 @@
               {# at the end of the loop #}
               {% if loop.last %}
                 {# {% if result.value > 1 %} #}
-                {# if result.value is greater than 0.8 degree enable heating #}
+                {# if result.value is greater than 0.5 degree enable heating #}
                 {# MAIN CONDITION #}
                 {% if result.value > 0.5 %}
-                20
+                {{ result.value | round(2) }}
                 {% else %}
-                10
+                0
                 {% endif %}
               {% endif %}
             {% endfor %}

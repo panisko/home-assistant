@@ -31,7 +31,7 @@
     data:
       message: Grzanie ON
   mode: single
-- id: '1621952924065'
+- id: SzuszenieReczników-O
   alias: SzuszenieReczników-O
   description: ''
   trigger:
@@ -64,8 +64,7 @@
     data:
       message: Syrena wlaczona
   mode: single
-- id: '1625381003630'
-  alias: TurnOnHeatingSource
+- alias: TurnOnHeatingSource
   description: When temperature that is set
   trigger:
   - platform: time_pattern
@@ -79,7 +78,7 @@
     enabled: false
   - condition: numeric_state
     entity_id: sensor.heating_calculation2
-    above: '11'
+    above: input_number.temperaturediff
     enabled: false
   - condition: device
     type: is_off
@@ -93,7 +92,7 @@
       state: 'on'
     - condition: numeric_state
       entity_id: sensor.heating_calculation2
-      above: 11
+      above: input_number.temperaturediff
     - condition: state
       entity_id: switch.pompa
       state: 'off'
@@ -150,7 +149,7 @@
   condition:
   - condition: numeric_state
     entity_id: sensor.heating_calculation2
-    below: '11'
+    below: input_number.temperaturediff
   - condition: device
     type: is_on
     device_id: 9325a6734bc629723ca8c43001f20033
@@ -221,7 +220,7 @@
       state: 'on'
     - condition: numeric_state
       entity_id: sensor.heating_calculation2
-      below: 11
+      below: input_number.temperaturediff
   action:
   - type: turn_off
     device_id: 9325a6734bc629723ca8c43001f20033
@@ -235,7 +234,7 @@
   - platform: numeric_state
     entity_id: weather.home
     attribute: temperature
-    below: 10
+    below: input_number.temperaturediff
   condition:
   - condition: state
     entity_id: input_boolean.grzanie
