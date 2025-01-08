@@ -28,7 +28,7 @@
       loop:
         - timers.yaml
         - groups.yaml
-        - secrets.yaml
+        #- secrets.yaml
         - automations.yaml
         - scenes.yaml
         - configuration.yaml

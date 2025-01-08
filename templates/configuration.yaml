@@ -1,14 +1,14 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
 
-#http:
-#  use_x_forwarded_for: true
-#  trusted_proxies:
-#    - 10.11.12.10
-#    - 192.168.30.0/24
-#    - 192.168.70.0/24
-#    - 172.17.0.0/16
-#    - 172.19.0.0/16
-#    - 127.0.0.1
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.11.12.10
+    - 192.168.30.0/24
+    - 192.168.70.0/24
+    - 172.17.0.0/16
+    - 172.19.0.0/16
+    - 127.0.0.1
 homekit:
   name: "HABridge"
   port: 21063
@@ -40,11 +40,26 @@ scene: !include scenes.yaml
 timer: !include timers.yaml
 template: !include templates.yaml
 
+input_boolean:
+  heating_all:
+    name: Heating
+    icon: mdi:fire
+  heating_rooms:
+    name: Heating rooms
+    icon: mdi:fire
 input_number:
-  temperaturediff:
-    name: Temperature trigger for heating
+  temperature_diff_all:
+    name: Trigger temperature difference all
     icon: mdi:home-thermometer-outline
-    initial: 0.5
+    initial: 2.0
+    min: 0
+    max: 4
+    step: 0.5
+    unit_of_measurement: step
+  temperature_diff_rooms:
+    name: Trigger temperature difference rooms
+    icon: mdi:home-thermometer-outline
+    initial: 0.7
     min: 0
     max: 1
     step: 0.1

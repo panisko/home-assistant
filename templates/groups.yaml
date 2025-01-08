@@ -1,43 +1,3 @@
-SypialnieTermostaty:
-  name: SypialnieTermostaty
-  entities:
-    - climate.termostatsypialniapm #termostatSypialniaPM
-    - climate.termostatsypialnial #termostatSypialniaL
-    - climate.termostatsypialniaf #termostatSypialniaF
-  all: true
-
-SypialnieTermometry:
-  name: SypialnieTermometry
-  entities:
-    - sensor.termostatsypialniapm_air_temperature #termostatSypialniaPM
-    - sensor.termostatsypialnial_air_temperature #termostatSypialniaL
-    - sensor.termostatsypialniaf_air_temperature #termostatSypialniaF
-  all: true
-
-Thermometers:
-  name: Thermometers
-  entities:
-    - sensor.termostatsypialnial_air_temperature #termostatPrzychodnia
-    - sensor.termostatprzedpokojpietro_air_temperature #termostatPrzedpokojPietro
-    - sensor.termostatlazienkapietro_air_temperature #termostatLazienkaPietro
-    - sensor.termostatsypialniapm_air_temperature #termostatSypialniaPM
-    - sensor.termostatsypialnial_air_temperature #termostatSypialniaL
-    - sensor.termostatsypialniaf_air_temperature #termostatSypialniaF
-    - sensor.termostatpiwnica_air_temperature #termostatPiwnica
-  all: true
-
-AllTermometry:
-  name: AllTermometry
-  entities:
-    - sensor.termostatsypialnial_air_temperature #termostatPrzychodnia
-    - sensor.termostatprzedpokojpietro_air_temperature #termostatPrzedpokojPietro
-    - sensor.termostatlazienkapietro_air_temperature #termostatLazienkaPietro
-    - sensor.termostatsypialniapm_air_temperature #termostatSypialniaPM
-    - sensor.termostatsypialnial_air_temperature #termostatSypialniaL
-    - sensor.termostatsypialniaf_air_temperature #termostatSypialniaF
-    - sensor.termostatpiwnica_air_temperature #termostatPiwnica
-  all: true
-
 Thermostats:
   name: Thermostats
   entities:
@@ -60,50 +20,23 @@ Thermostats:
   all: true
 
 
-AllTermostaty:
-  name: AllTermostaty
+RoomThermostats::
+  name: Room Thermostats
   entities:
-    - climate.termostatprzychodnia_thermostat #termostatPrzychodnia
-    - climate.termostatprzychodnia #termostatPrzychodnia WS3000
-    - climate.termostatprzedpokojpietro_thermostat #termostatPrzedpokojPietro
-    - climate.termostatprzedpokojpietro #termostatPrzedpokojPietro WS 3000
-    - climate.termostatlazienkapietro_thermostat #termostatLazienkaPietro
-    - climate.termostatlazienkapietro #termostatLazienkaPietro WS3000
+    #- climate.termostatprzychodnia_thermostat #termostatPrzychodnia
+    #- climate.termostatprzychodnia #termostatPrzychodnia WS3000
+    #- climate.termostatprzedpokojpietro_thermostat #termostatPrzedpokojPietro
+    #- climate.termostatprzedpokojpietro #termostatPrzedpokojPietro WS 3000
+    #- climate.termostatlazienkapietro_thermostat #termostatLazienkaPietro
+    #- climate.termostatlazienkapietro #termostatLazienkaPietro WS3000
     - climate.termostatsypialniapm_thermostat #termostatSypialniaPM
     - climate.termostatsypialniapm #termostatSypialniaPM WS3000
     - climate.termostatsypialnial_thermostat #termostatSypialniaL
     - climate.termostatsypialnial #termostatSypialniaL WS3000
     - climate.termostatsypialniaf_thermostat #termostatSypialniaF
     - climate.termostatsypialniaf #termostatSypialniaF WS3000
-    - climate.termostatpiwnica_thermostat #termostatPiwnica
-    - climate.termostatpiwnica #termostatPiwnica WS3000
-    - climate.zapas1_thermostat #termostaty
-    - climate.zapas2_thermostat #termostaty
+    #- climate.termostatpiwnica_thermostat #termostatPiwnica
+    #- climate.termostatpiwnica #termostatPiwnica WS3000
+    #- climate.zapas1_thermostat #termostaty
+    #- climate.zapas2_thermostat #termostaty
   all: true
-
-#
-#AllLights:
-#  name: AllLights
-#  entities:
-#    - light.hue_aurelle_panel_1
-#    - light.hue_bulb
-#    - light.hue_bulb_2
-#    - light.hue_bulb_3
-#    - light.hue_bulb_4
-#    - light.hue_centris_ceiling_1
-#    - light.hue_centris_ceiling_2_tv
-#    - light.hue_centris_spot_1
-#    - light.hue_centris_spot_3
-#    - light.hue_centris_spot_4
-#    - light.hue_centris_spot_5_tv
-#    - light.hue_centris_spot_6_tv
-#    - light.kuchnia
-#    - light.przedpokoj
-#    - light.salon
-#    - light.stpialnia
-#    - light.swiatlo_hue_1
-#    - light.swiatlo_hue_2
-#    - light.swiatlo_hue_3
-#    - light.swiatlo_hue_4
-#    - light.swiatlo_hue_5
-#    - light.sypialnia

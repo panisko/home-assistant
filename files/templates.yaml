@@ -5,122 +5,34 @@
         minutes: "*"
         seconds: "/30"
     sensor:
-      - name: "average_temperature"
-        unit_of_measurement: "°C"
-        state: >
-          {% set temp = expand(['group.AllTermometry']) 
-          | selectattr("attributes.device_class", "eq", "temperature")
-          | rejectattr('state', 'in', ['unavailable', 'unknown'])
-          | map(attribute="state") | map("float") | list 
-          %}
-          {% if (temp|length) > 0 %}
-            {{ ((temp| sum) / (temp|count)) | round(2) }}
-          {% else %}
-            0
-          {% endif %}
-  - trigger:
-      - platform: time_pattern
-        hours: "*"
-        minutes: "*"
-        seconds: "/30"
-    sensor:
-      - name: "Heating_calculation"
-        state: >
-          {# generates list of thermostats #}
-          {% set temp = expand('group.AllTermostaty')
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.temperature') | list %}
-          {% set curr = expand('group.AllTermostaty')
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.current_temperature') | list %}
-          {% if (temp|length) > 0 %}
-            {% set sum = 0 %}
-            {% for t in temp %}
-              {% set sum = (temp[loop.index0] / curr[loop.index0]) + sum %}
-              {% if loop.last %}
-                {% if sum|round(2) > 1 %}
-                2
-                {% else %}
-                1
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-          0
-          {% endif %}
-  - trigger:
-      - platform: time_pattern
-        hours: "*"
-        minutes: "*"
-        seconds: "/30"
-    sensor:
-      - name: "Heating_calculation2-old"
-        state: >
-          {% set temp = expand('group.AllTermostaty') 
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.temperature') | list %}
-          {% set curr = expand('group.AllTermostaty') 
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.current_temperature') | list %}
-          {% if (temp|length) > 0 %}
-            {% set result = namespace( value = 0) %}
-            {% for t in temp %}
-              {# calculate how many rooms are below set temp #}      
-              {% if (curr[loop.index0] / temp[loop.index0]) <= 1 %}
-                {% set result.value = result.value + 1 %}
-              {% endif %}
-              {# at the end of the loop #}
-              {% if loop.last %}
-                {% if result.value * 2 > temp|length %}
-                {# if there is more than half rooms below set temp #}
-                20
-                {% else %}
-                10
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-          0
-          {% endif %}
-  - trigger:
-      - platform: time_pattern
-        hours: "*"
-        minutes: "*"
-        seconds: "/30"
-    sensor:
-      - name: "Heating_calculation2"
+      - name: "Heating_calculation_all"
         state: >
           {# get list of available thermostats and get TARGET templerature #}
-          {% set temp = expand('group.AllTermostaty')
+          {% set temp = expand('group.Thermostats')
           | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
           | map(attribute='attributes.temperature') 
           | list %}
           {# get list of available thermostats and get CURRENT templerature #}
-          {% set curr = expand('group.AllTermostaty')
+          {% set curr = expand('group.Thermostats')
           | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
           | map(attribute='attributes.current_temperature') | list %}
+          {# check, if there are any thermostats that can be used #}
           {% if (temp|length) > 0 %}
             {% set result = namespace( value = 0) %}
             {% for t in temp %}
               {% set rate = (curr[loop.index0] - temp[loop.index0]) %}
-              {# when temp is below target value #}      
+              {# when temp is below target value #}
               {% if rate < 0 %}
                 {% set result.value = result.value + rate|abs %}
               {% endif %}
               {# at the end of the loop #}
               {% if loop.last %}
-                {# {% if result.value > 1 %} #}
-                {# if result.value is greater than 0.5 degree enable heating #}
-                {# MAIN CONDITION #}
-                {% if result.value > 0.5 %}
                 {{ result.value | round(2) }}
-                {% else %}
-                0
-                {% endif %}
               {% endif %}
             {% endfor %}
           {% else %}
-          0
+          {# if there are no thermostats that can be used for calculation #}
+          -1
           {% endif %}
   - trigger:
       - platform: time_pattern
@@ -128,67 +40,32 @@
         minutes: "*"
         seconds: "/30"
     sensor:
-      - name: "Heating_calculation4"
+      - name: "Heating_calculation_rooms"
         state: >
-          {% set temp = expand('group.AllTermostaty') 
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.temperature') | list %}
-          {% set curr = expand('group.AllTermostaty') 
-          | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
-          | map(attribute='attributes.current_temperature') | list %}
-          {% if (temp|length) > 0 %}
-            {% set result = namespace( value = 0) %}
-            {% for t in temp %}
-              {# calculate how many rooms are below set temp #}      
-              {% if (curr[loop.index0] / temp[loop.index0]) <= 1 %}
-                {% set result.value = result.value + 1 %}
-              {% endif %}
-              {# at the end of the loop #}
-              {% if loop.last %}
-                {% if result.value * 2 > temp|length %}
-                {# if there is more than half rooms below set temp #}
-                20
-                {% else %}
-                10
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-          0
-          {% endif %}
-  - trigger:
-      - platform: time_pattern
-        hours: "*"
-        minutes: "*"
-        seconds: "/30"
-    sensor:
-      - name: "Heating_calculation5"
-        state: >
-          {% set temp = expand('group.Termostaty')
+          {# get list of available thermostats and get TARGET templerature #}
+          {% set temp = expand('group.RoomThermostats')
           | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
           | map(attribute='attributes.temperature') 
           | list %}
-          {% set curr = expand('group.Termostaty')
+          {# get list of available thermostats and get CURRENT templerature #}
+          {% set curr = expand('group.RoomThermostats')
           | rejectattr('state', 'in', ['unavailable', 'unknown', 'off'])
           | map(attribute='attributes.current_temperature') | list %}
+          {# check, if there are any thermostats that can be used #}
           {% if (temp|length) > 0 %}
             {% set result = namespace( value = 0) %}
             {% for t in temp %}
               {% set rate = (curr[loop.index0] - temp[loop.index0]) %}
-              {# calculate how many rooms are below set temp #}      
+              {# when temp is below target value #}
               {% if rate < 0 %}
                 {% set result.value = result.value + rate|abs %}
               {% endif %}
               {# at the end of the loop #}
               {% if loop.last %}
-                {% if result.value > 1 %}
-                {# if there is more than half rooms below set temp #}
-                200
-                {% else %}
-                100
-                {% endif %}
+                {{ result.value | round(2) }}
               {% endif %}
             {% endfor %}
           {% else %}
-          0
+          {# if there are no thermostats that can be used for calculation #}
+          -1
           {% endif %}
